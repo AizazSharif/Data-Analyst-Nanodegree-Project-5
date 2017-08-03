@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Untitled</title>
+<title>Untitled1</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11798,23 +11798,31 @@ div#notebook {
 </ul>
 <p>Bonus salary ratio might be able to pick up on potential mischief involving employees with low salaries and high bonuses, or vice versa.</p>
 <p>Scaling the 'from_this_person_to_poi' and 'from_poi_to_this_person'  by the total number of emails sent and received, respectively, might help us identify those have low amounts of email activity overall, but a high percentage of email activity with POIs.</p>
-<h4 id="Scaling">Scaling<a class="anchor-link" href="#Scaling">&#182;</a></h4><p>As described on stats.stackexchange (link for <a href="http://stats.stackexchange.com/questions/121886/when-should-i-apply-feature-scaling-for-my-data">k-nearest neighbours</a>; link for <a href="http://stats.stackexchange.com/questions/65094/why-scaling-is-important-for-the-linear-svm-classification">SVM</a>), normalization is required for algorithms like:</p>
+<p>Precision without these new features = 0.87
+Recall without these new features = 0.61
+f1-score without these new features = 0.68</p>
+<p>Only 5 features were being selected based on score.
+In the final results of decision tree classifier below you will see the improvement in all above values mentioned. I have shared try.py where new features are missing and its used to train classifier for comparison.</p>
+<h4 id="Scaling">Scaling<a class="anchor-link" href="#Scaling">&#182;</a></h4><p>As described on stats.stackexchange (link for <a href="http://stats.stackexchange.com/questions/121886/when-should-i-apply-feature-scaling-for-my-data">k-nearest neighbours</a>; link for <a href="http://stats.stackexchange.com/questions/65094/why-scaling-is-important-for-the-linear-svm-classification">SVM</a>), normalization is required for:</p>
 <ul>
 <li>k-nearest neighbours because the distance between the points drives the clustering that determines the nearest neighbours. If one feature has a much larger scale than another, the clustering will be driven by the larger scale and the distance between points on the smaller scale will be overshadowed.</li>
 <li>SVM because the distance between the separating plane and the support vectors drives the algorithm's decision-making. If one feature has a much larger scale than another, it will dominate the other features distance-wise.</li>
 </ul>
 <p>Scaling isn't required for tree-based algorithms because the splitting of the data is based on a threshold value. This decision made based on this threshold value is not affected by different scales.</p>
 <h4 id="Selection-Process">Selection Process<a class="anchor-link" href="#Selection-Process">&#182;</a></h4><p>I used a univariate feature selection process, select k-best, in a pipeline with grid search to select the features. Select k-best removes all but the k highest scoring features. The number of features, 'k', was chosen through an exhaustive grid search driven by the 'f1' scoring estimator, intending to maximize precision and recall.</p>
-<h4 id="Features-Selected">Features Selected<a class="anchor-link" href="#Features-Selected">&#182;</a></h4><p>I used the following six features in my POI identifier, which was a decision tree classifier. The first number is feature importance (from the decision tree classifier) and the second is feature score (from select k-best). The order of features is descending based on feature importance.</p>
+<h4 id="Features-Selected">Features Selected<a class="anchor-link" href="#Features-Selected">&#182;</a></h4><p>Features commented out in features_list are done because they were not helping in generating good results and the best number of features were getting decreased too.</p>
+<p>I used the following six features in my POI identifier, which was a decision tree classifier. The first number is feature importance (from the decision tree classifier) and the second is feature score (from select k-best). The order of features is descending based on feature importance.</p>
 <ul>
-<li>Feature no. 1: bonus_salary_ratio (0.658595952706) (22.1067164085)</li>
-<li>Feature no. 2: shared_receipt_with_poi (0.180270198721) (6.1299573021)</li>
-<li>Feature no. 3: total_stock_value (0.161133848573) (16.8651432616)</li>
-<li>Feature no. 4: exercised_stock_options (0.0) (16.9328653375)</li>
-<li>Feature no. 5: bonus (0.0) (34.2129648303)</li>
-<li>Feature no. 6: salary (0.0) (17.7678544529)</li>
+<li>Feature no. 1: bonus_salary_ratio (0.523375297384) (22.1067164085)</li>
+<li>Feature no. 2: from_this_person_to_poi_percentage (0.256158842573) (2.57003229971)</li>
+<li>Feature no. 3: total_stock_value (0.220465860043) (16.8651432616)</li>
+<li>Feature no. 4: shared_receipt_with_poi (0.0) (0.0285577686199)</li>
+<li>Feature no. 5: exercised_stock_options (0.0) (16.9328653375)</li>
+<li>Feature no. 6: deferred_income (0.0) (16.3662859037)</li>
+<li>Feature no. 7: bonus (0.0) (34.2129648303)</li>
+<li>Feature no. 8: salary (0.0) (17.7678544529)
+Bonus salary ratio, shared receipt with a POI, and total stock value were the most important features.</li>
 </ul>
-<p>Bonus salary ratio, shared receipt with a POI, and total stock value were the most important features.</p>
 <h3 id="What-algorithm-did-you-end-up-using?-What-other-one(s)-did-you-try?-How-did-model-performance-differ-between-algorithms?--[relevant-rubric-item:-&#8220;pick-an-algorithm&#8221;]">What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?  [relevant rubric item: &#8220;pick an algorithm&#8221;]<a class="anchor-link" href="#What-algorithm-did-you-end-up-using?-What-other-one(s)-did-you-try?-How-did-model-performance-differ-between-algorithms?--[relevant-rubric-item:-&#8220;pick-an-algorithm&#8221;]">&#182;</a></h3><p>I focused on three algorithms, with parameter tuning incorporated into algorithm selection (i.e. parameters tuned for more than one algorithm, and best algorithm-tune combination selected for final analysis). These algorithms were:</p>
 <ul>
 <li>decision tree classifier</li>
@@ -11840,7 +11848,9 @@ div#notebook {
 <h3 id="What-is-validation,-and-what&#8217;s-a-classic-mistake-you-can-make-if-you-do-it-wrong?-How-did-you-validate-your-analysis?--[relevant-rubric-item:-&#8220;validation-strategy&#8221;]">What is validation, and what&#8217;s a classic mistake you can make if you do it wrong? How did you validate your analysis?  [relevant rubric item: &#8220;validation strategy&#8221;]<a class="anchor-link" href="#What-is-validation,-and-what&#8217;s-a-classic-mistake-you-can-make-if-you-do-it-wrong?-How-did-you-validate-your-analysis?--[relevant-rubric-item:-&#8220;validation-strategy&#8221;]">&#182;</a></h3><p>Validation is a way to substantiate your machine learning algorithm's performance, i.e., to test how well your model has been trained. A classic validation mistake is testing your algorithm on the same data that is was trained on. Without separating the training set from the testing set, it is difficult to determine how well your algorithm generalizes to new data.</p>
 <p>In my poi_id.py file, my data was separated into training and testing sets. The test size was 30% of the data, while the training set was 70%.</p>
 <p>I also used tester.py's Stratified Shuffle Split cross validation as an alternate method to gauge my algorithm's performance. Because the Enron data set is so small, this type of cross validation was useful because it essentially created multiple datasets out of a single one to get more accurate results.</p>
-<h3 id="Give-at-least-2-evaluation-metrics-and-your-average-performance-for-each-of-them.--Explain-an-interpretation-of-your-metrics-that-says-something-human-understandable-about-your-algorithm&#8217;s-performance.-[relevant-rubric-item:-&#8220;usage-of-evaluation-metrics&#8221;]">Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm&#8217;s performance. [relevant rubric item: &#8220;usage of evaluation metrics&#8221;]<a class="anchor-link" href="#Give-at-least-2-evaluation-metrics-and-your-average-performance-for-each-of-them.--Explain-an-interpretation-of-your-metrics-that-says-something-human-understandable-about-your-algorithm&#8217;s-performance.-[relevant-rubric-item:-&#8220;usage-of-evaluation-metrics&#8221;]">&#182;</a></h3><p>The two notable evaluation metrics for this POI identifier are precision and recall. The average precision for my decision tree classifier was 0.31336 and the average recall was 0.59100. What do each of these mean?</p>
+<p>Stratification is the process of rearranging the data as to ensure each fold is a good representative of the whole. For example in a binary classification problem where each class comprises 50% of the data, it is best to arrange the data such that in every fold, each class comprises around half the instances.
+Stratification is generally a better scheme, both in terms of bias and variance, when compared to regular cross-validation.</p>
+<h3 id="Give-at-least-2-evaluation-metrics-and-your-average-performance-for-each-of-them.--Explain-an-interpretation-of-your-metrics-that-says-something-human-understandable-about-your-algorithm&#8217;s-performance.-[relevant-rubric-item:-&#8220;usage-of-evaluation-metrics&#8221;]">Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm&#8217;s performance. [relevant rubric item: &#8220;usage of evaluation metrics&#8221;]<a class="anchor-link" href="#Give-at-least-2-evaluation-metrics-and-your-average-performance-for-each-of-them.--Explain-an-interpretation-of-your-metrics-that-says-something-human-understandable-about-your-algorithm&#8217;s-performance.-[relevant-rubric-item:-&#8220;usage-of-evaluation-metrics&#8221;]">&#182;</a></h3><p>The two notable evaluation metrics for this POI identifier are precision and recall. The average precision for my decision tree classifier was 0.91 and the average recall was 0.84 and f1-score as 0.86. What do each of these mean?</p>
 <ul>
 <li>Precision is how often our class prediction (POI vs. non-POI) is right when we guess that class</li>
 <li>Recall is how often we guess the class (POI vs. non-POI) when the class actually occurred</li>

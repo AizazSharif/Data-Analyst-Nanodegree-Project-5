@@ -18,7 +18,7 @@ features_list = [
                  # 'total_payments',
                  # 'loan_advances',
                  'bonus',
-                 'bonus_salary_ratio',
+
                  # 'restricted_stock_deferred',
                   'deferred_income',
                  'total_stock_value',
@@ -30,10 +30,10 @@ features_list = [
                  # 'director_fees',
                   'to_messages',
                  # 'from_poi_to_this_person',
-                  'from_poi_to_this_person_percentage',
+
                   'from_messages',
                  # 'from_this_person_to_poi',
-                 'from_this_person_to_poi_percentage',
+
                  'shared_receipt_with_poi'
                  ]
 
@@ -48,34 +48,15 @@ data_dict.pop("THE TRAVEL AGENCY IN THE PARK")
 
 ### Task 3: Create new feature(s)
 
-# Bonus-salary ratio
-for employee, features in data_dict.iteritems():
-	if features['bonus'] == "NaN" or features['salary'] == "NaN":
-		features['bonus_salary_ratio'] = "NaN"
-	else:
-		features['bonus_salary_ratio'] = float(features['bonus']) / float(features['salary'])
 
-# from_this_person_to_poi as a percentage of from_messages
-for employee, features in data_dict.iteritems():
-	if features['from_this_person_to_poi'] == "NaN" or features['from_messages'] == "NaN":
-		features['from_this_person_to_poi_percentage'] = "NaN"
-	else:
-		features['from_this_person_to_poi_percentage'] = float(features['from_this_person_to_poi']) / float(features['from_messages'])
-
-# from_poi_to_this_person as a percentage of to_messages
-for employee, features in data_dict.iteritems():
-	if features['from_poi_to_this_person'] == "NaN" or features['to_messages'] == "NaN":
-		features['from_poi_to_this_person_percentage'] = "NaN"
-	else:
-		features['from_poi_to_this_person_percentage'] = float(features['from_poi_to_this_person']) / float(features['to_messages'])
 
 ### Impute missing email features to mean
 email_features = ['to_messages',
 	              'from_poi_to_this_person',
-	              'from_poi_to_this_person_percentage',
+
 	              'from_messages',
 	              'from_this_person_to_poi',
-	              'from_this_person_to_poi_percentage',
+
 	              'shared_receipt_with_poi']
 from collections import defaultdict
 email_feature_sums = defaultdict(lambda:0)
